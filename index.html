@@ -8,11 +8,43 @@
     <script defer src="./js/script.js"></script>
   </head>
   <body>
-    <div class="quiz__container">
+    <div class="quiz-app">
       <!-- Start Screen -->
-      <h1 class="quiz__title">Quiz Challenge</h1>
-      <p class="quiz__text">Test your knowledge with these questions!</p>
-      <button id="startQuizBtn" class="quiz__btn">Start Quiz</button>
+      <div class="start__screen hide">
+        <h1 class="start__title">Quiz Challenge</h1>
+        <p class="start__text">Test your knowledge with these questions!</p>
+        <button id="startQuizBtn" class="start__btn">Start Quiz</button>
+      </div>
+
+      <!-- Quiz Screen -->
+      <div class="quiz__screen hide">
+        <div class="quiz__header">
+          <div class="quiz__progress">
+            <span class="quiz__progress--text">Question</span
+            ><span id="currentQuestion">1</span>/<span id="totalQuestions"
+              >10</span
+            >
+            <div class="quiz__progress--bar">
+              <div id="progressBar" class="quiz__progress--fill"></div>
+            </div>
+          </div>
+        </div>
+        <div class="quiz__timer">
+          <span class="quiz__timer--text">Time Left</span>
+          <span id="timer">30</span>
+        </div>
+        <div class="quiz__container">
+          <h2 id="question" class="quiz__question"></h2>
+          <div id="options" class="quiz__options"></div>
+        </div>
+      </div>
+
+      <!-- End Screen -->
+      <div class="end__screen">
+        <h2 class="end__title">Quiz Completed!</h2>
+        <p class="end__text">Your Score: <span id="score">0</span></p>
+        <button id="restartQuizBtn" class="quiz__btn">Restart Quiz</button>
+      </div>
     </div>
   </body>
 </html>

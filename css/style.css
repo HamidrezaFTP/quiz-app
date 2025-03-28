@@ -20,7 +20,7 @@ body {
   background-color: var(--secondary-color);
 }
 
-.quiz__container {
+.quiz-app {
   width: 90%;
   max-width: 600px;
   background: white;
@@ -45,4 +45,16 @@ body {
 
 .quiz__btn:hover {
   background-color: #3578e5;
+}
+
+.hide {
+  display: none;
+}
+
+.end__screen {
+  text-align: center;
+}
+
+.end__text {
+  margin: 1rem 0;
 }
