@@ -10,37 +10,37 @@
   <body>
     <div class="quiz-app">
       <!-- Start Screen -->
-      <div class="start__screen hide">
+      <div id="startScreen" class="start__screen">
         <h1 class="start__title">Quiz Challenge</h1>
         <p class="start__text">Test your knowledge with these questions!</p>
         <button id="startQuizBtn" class="start__btn">Start Quiz</button>
       </div>
 
       <!-- Quiz Screen -->
-      <div class="quiz__screen hide">
-        <div class="quiz__header">
-          <div class="quiz__progress">
-            <span class="quiz__progress--text">Question</span
-            ><span id="currentQuestion">1</span>/<span id="totalQuestions"
-              >10</span
-            >
-            <div class="quiz__progress--bar">
-              <div id="progressBar" class="quiz__progress--fill"></div>
+      <div id="questionScreen" class="question__screen hide">
+        <div class="question__header">
+          <div class="question__progress">
+            <span class="question__progress--text">Question </span
+            ><span id="currentQuestion"></span>/<span
+              id="totalQuestions"
+            ></span>
+            <div class="question__progress--bar">
+              <div id="progressBar" class="question__progress--fill"></div>
             </div>
           </div>
+          <div class="question__timer">
+            <span class="question__timer--text">Time Left</span>
+            <span id="timer">30</span>
+          </div>
         </div>
-        <div class="quiz__timer">
-          <span class="quiz__timer--text">Time Left</span>
-          <span id="timer">30</span>
-        </div>
-        <div class="quiz__container">
-          <h2 id="question" class="quiz__question"></h2>
-          <div id="options" class="quiz__options"></div>
+        <div class="question__container">
+          <h2 id="question" class="question__title"></h2>
+          <div id="options" class="question__options"></div>
         </div>
       </div>
 
       <!-- End Screen -->
-      <div class="end__screen">
+      <div class="end__screen hide">
         <h2 class="end__title">Quiz Completed!</h2>
         <p class="end__text">Your Score: <span id="score">0</span></p>
         <button id="restartQuizBtn" class="quiz__btn">Restart Quiz</button>
