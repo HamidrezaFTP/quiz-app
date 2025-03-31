@@ -106,6 +106,18 @@ body {
   border-color: var(--primary-color);
 }
 
+.optionButton.correct {
+  background: var(--correct-color);
+  border-color: var(--correct-color);
+  color: white;
+}
+
+.optionButton.wrong {
+  background: var(--wrong-color);
+  border-color: var(--wrong-color);
+  color: white;
+}
+
 .end__screen {
   text-align: center;
 }

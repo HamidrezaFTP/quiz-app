@@ -1,3 +1,6 @@
+"use strict";
+
+// Selecting elements from the DOM
 const startScreen = document.getElementById("startScreen");
 const startButton = document.getElementById("startQuizBtn");
 const quizScreen = document.getElementById("questionScreen");
@@ -9,6 +12,13 @@ const questionElement = document.getElementById("question");
 const optionsContainer = document.getElementById("options");
 const restartButton = document.getElementById("restartQuizBtn");
 
+// Variables to keep track of the quiz state
+let currentQuestionIndex = 0;
+let score = 0;
+let timeLeft = 30;
+let timerId;
+
+// Question data
 const questions = [
   {
     question: "What is the capital of France?",
@@ -27,8 +37,29 @@ const questions = [
   },
 ];
 
-const loadQuestion = (questionIndex) => {
-  const currentQuestion = questions[questionIndex];
+const checkAnswer = (selectedOption) => {
+  const isCorrect = selectedOption === questions[currentQuestionIndex].answer;
+  const optionButtons = document.querySelectorAll(".optionButton");
+
+  optionButtons.forEach((button, index) => {
+    if (index === selectedOption) {
+      button.classList.add(isCorrect ? "correct" : "wrong");
+    }
+    if (index === questions[currentQuestionIndex].answer && !isCorrect) {
+      button.classList.add("correct");
+    }
+  });
+
+  if (isCorrect) score++;
+
+  setTimeout(() => {
+    currentQuestionIndex++;
+    currentQuestionIndex < questions.length ? loadQuestion() : endQuiz();
+  }, 1000);
+};
+
+const loadQuestion = () => {
+  const currentQuestion = questions[currentQuestionIndex];
   questionElement.textContent = currentQuestion.question;
   optionsContainer.innerHTML = "";
 
@@ -36,19 +67,37 @@ const loadQuestion = (questionIndex) => {
     const button = document.createElement("button");
     button.textContent = option;
     button.classList.add("optionButton");
-    button.addEventListener("click", () => checkAnswer(index, questionIndex));
+    button.addEventListener("click", () => checkAnswer(index));
     optionsContainer.appendChild(button);
   });
 
-  currentQuestionElement.textContent = questionIndex + 1;
+  currentQuestionElement.textContent = currentQuestionIndex + 1;
   totalQuestionsElement.textContent = questions.length;
-  progressBar.style.width = `${(questionIndex / questions.length) * 100}%`;
+  progressBar.style.width = `${
+    (currentQuestionIndex / questions.length) * 100
+  }%`;
+};
+
+const startTimer = () => {
+  timerId = setInterval(() => {
+    timeLeft--;
+    console.log(timeLeft);
+    timerElement.textContent = timeLeft;
+
+    if (timeLeft <= 0) {
+      clearInterval(timerId);
+      endQuiz();
+    }
+  }, 1000);
 };
 
 const startQuiz = () => {
   startScreen.classList.add("hide");
   quizScreen.classList.remove("hide");
-  loadQuestion(0);
+  loadQuestion();
+  startTimer();
 };
 
+// Start the quiz
 startButton.addEventListener("click", startQuiz);
+restartButton.addEventListener("click", startQuiz);
