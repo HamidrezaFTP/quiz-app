@@ -1,6 +1,6 @@
 "use strict";
 
-// Selecting elements from the DOM
+// DOM Elements
 const startScreen = document.getElementById("startScreen");
 const startButton = document.getElementById("startQuizBtn");
 const quizScreen = document.getElementById("questionScreen");
@@ -14,7 +14,7 @@ const endScreen = document.getElementById("endScreen");
 const scoreElement = document.getElementById("score");
 const restartButton = document.getElementById("restartQuizBtn");
 
-// Question data
+// Questions Data
 const questions = [
   {
     question: "What is the capital of France?",
@@ -33,21 +33,23 @@ const questions = [
   },
 ];
 
-// Variables to keep track of the quiz state
+// Quiz State
 let currentQuestionIndex = 0;
 let score = 0;
 let timeLeft = 30;
 let timerId;
 
+// End Quiz
 const endQuiz = () => {
-  clearInterval(timerId); // Stop the timer
+  clearInterval(timerId);
   quizScreen.classList.add("hide");
   endScreen.classList.remove("hide");
-  scoreElement.textContent = `Your score is ${score} out of ${questions.length}`;
-  progressBar.style.width = "0%"; // Reset progress bar
-  timerElement.textContent = ""; // Reset timer display
+  scoreElement.textContent = `${score} out of ${questions.length}`;
+  progressBar.style.width = "0%";
+  timerElement.textContent = "";
 };
 
+// Check Answer
 const checkAnswer = (selectedOption) => {
   const isCorrect = selectedOption === questions[currentQuestionIndex].answer;
   const optionButtons = document.querySelectorAll(".optionButton");
@@ -69,6 +71,7 @@ const checkAnswer = (selectedOption) => {
   }, 1000);
 };
 
+// Load Question
 const loadQuestion = () => {
   const currentQuestion = questions[currentQuestionIndex];
   questionElement.textContent = currentQuestion.question;
@@ -89,6 +92,7 @@ const loadQuestion = () => {
   }%`;
 };
 
+// Start Timer
 const startTimer = () => {
   timerId = setInterval(() => {
     timeLeft--;
@@ -101,12 +105,13 @@ const startTimer = () => {
   }, 1000);
 };
 
+// Start Quiz
 const startQuiz = () => {
   currentQuestionIndex = 0;
   score = 0;
-  timeLeft = 30; // Reset timer
-  timerElement.textContent = timeLeft; // Reset timer display
-  progressBar.style.width = "0%"; // Reset progress bar
+  timeLeft = 30;
+  timerElement.textContent = timeLeft;
+  progressBar.style.width = "0%";
   startScreen.classList.add("hide");
   quizScreen.classList.remove("hide");
   endScreen.classList.add("hide");
@@ -114,6 +119,6 @@ const startQuiz = () => {
   startTimer();
 };
 
-// Start the quiz
+// Event Listeners
 startButton.addEventListener("click", startQuiz);
 restartButton.addEventListener("click", startQuiz);
