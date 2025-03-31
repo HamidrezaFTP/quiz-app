@@ -10,13 +10,9 @@ const progressBar = document.getElementById("progressBar");
 const timerElement = document.getElementById("timer");
 const questionElement = document.getElementById("question");
 const optionsContainer = document.getElementById("options");
+const endScreen = document.getElementById("endScreen");
+const scoreElement = document.getElementById("score");
 const restartButton = document.getElementById("restartQuizBtn");
-
-// Variables to keep track of the quiz state
-let currentQuestionIndex = 0;
-let score = 0;
-let timeLeft = 30;
-let timerId;
 
 // Question data
 const questions = [
@@ -36,6 +32,21 @@ const questions = [
     answer: 0,
   },
 ];
+
+// Variables to keep track of the quiz state
+let currentQuestionIndex = 0;
+let score = 0;
+let timeLeft = 30;
+let timerId;
+
+const endQuiz = () => {
+  clearInterval(timerId); // Stop the timer
+  quizScreen.classList.add("hide");
+  endScreen.classList.remove("hide");
+  scoreElement.textContent = `Your score is ${score} out of ${questions.length}`;
+  progressBar.style.width = "0%"; // Reset progress bar
+  timerElement.textContent = ""; // Reset timer display
+};
 
 const checkAnswer = (selectedOption) => {
   const isCorrect = selectedOption === questions[currentQuestionIndex].answer;
@@ -81,7 +92,6 @@ const loadQuestion = () => {
 const startTimer = () => {
   timerId = setInterval(() => {
     timeLeft--;
-    console.log(timeLeft);
     timerElement.textContent = timeLeft;
 
     if (timeLeft <= 0) {
@@ -92,8 +102,14 @@ const startTimer = () => {
 };
 
 const startQuiz = () => {
+  currentQuestionIndex = 0;
+  score = 0;
+  timeLeft = 30; // Reset timer
+  timerElement.textContent = timeLeft; // Reset timer display
+  progressBar.style.width = "0%"; // Reset progress bar
   startScreen.classList.add("hide");
   quizScreen.classList.remove("hide");
+  endScreen.classList.add("hide");
   loadQuestion();
   startTimer();
 };
