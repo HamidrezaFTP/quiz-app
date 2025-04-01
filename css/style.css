@@ -27,6 +27,7 @@ body {
   border-radius: 10px;
   padding: 2rem;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
 }
 
 .start__text,
@@ -124,4 +125,11 @@ body {
 
 .end__text {
   margin: 1rem 0;
+}
+
+@media (max-width: 480px) {
+  .quiz-app {
+    width: 95%;
+    padding: 1rem;
+  }
 }

@@ -79,7 +79,7 @@ const loadQuestion = () => {
 
   currentQuestion.options.forEach((option, index) => {
     const button = document.createElement("button");
-    button.textContent = option;
+    button.textContent = option.trim();
     button.classList.add("optionButton");
     button.addEventListener("click", () => checkAnswer(index));
     optionsContainer.appendChild(button);
