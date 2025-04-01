@@ -73,11 +73,11 @@ const checkAnswer = (selectedOption) => {
 
 // Load Question
 const loadQuestion = () => {
-  const currentQuestion = questions[currentQuestionIndex];
-  questionElement.textContent = currentQuestion.question;
+  const { question, options } = questions[currentQuestionIndex];
+  questionElement.textContent = question;
   optionsContainer.innerHTML = "";
 
-  currentQuestion.options.forEach((option, index) => {
+  options.forEach((option, index) => {
     const button = document.createElement("button");
     button.textContent = option.trim();
     button.classList.add("optionButton");

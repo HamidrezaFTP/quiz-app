@@ -100,6 +100,7 @@ body {
   width: 100%;
   text-align: left;
   transition: all 0.3s;
+  min-height: 50px;
 }
 
 .optionButton:hover {
@@ -128,6 +129,10 @@ body {
 }
 
 @media (max-width: 480px) {
+  html {
+    font-size: 0.9rem;
+  }
+
   .quiz-app {
     width: 95%;
     padding: 1rem;
