@@ -17,9 +17,9 @@ const loadingElement = document.getElementById("loading");
 const errorElement = document.getElementById("error");
 
 // Quiz State
-let currentQuestionIndex = 0;
-let score = 0;
-let timeLeft = 30;
+let currentQuestionIndex;
+let score;
+let timeLeft;
 let timerId;
 
 // Questions Data
@@ -64,14 +64,17 @@ const fetchQuestions = async () => {
       throw new Error("Failed to fetch questions. Please try again.");
     }
 
-    questions = data.results.map((item) => ({
-      question: decodeHtml(item.question),
-      options: shuffleArray([
+    questions = data.results.map((item) => {
+      const options = shuffleArray([
         ...item.incorrect_answers.map((answer) => decodeHtml(answer)),
         decodeHtml(item.correct_answer),
-      ]),
-      answer: item.incorrect_answers.length, // Correct answer index
-    }));
+      ]);
+      return {
+        question: decodeHtml(item.question),
+        options,
+        answer: options.indexOf(decodeHtml(item.correct_answer)), // Correct answer index
+      };
+    });
   } catch (error) {
     showError(error.message);
     return [];
@@ -126,7 +129,7 @@ const checkAnswer = (selectedOption) => {
 // Start Timer
 const startTimer = () => {
   clearInterval(timerId); // Clear any existing timer
-  timeLeft = 30;
+  timeLeft = 120;
   timerElement.textContent = timeLeft;
 
   timerId = setInterval(() => {
@@ -144,7 +147,7 @@ const startTimer = () => {
 const startQuiz = () => {
   currentQuestionIndex = 0;
   score = 0;
-  timeLeft = 30;
+  timeLeft = 120;
   timerElement.textContent = timeLeft;
   progressBar.style.width = "0%";
   startScreen.classList.add("hide");
