@@ -13,25 +13,8 @@ const optionsContainer = document.getElementById("options");
 const endScreen = document.getElementById("endScreen");
 const scoreElement = document.getElementById("score");
 const restartButton = document.getElementById("restartQuizBtn");
-
-// Questions Data
-const questions = [
-  {
-    question: "What is the capital of France?",
-    options: ["Berlin", "Madrid", "Paris", "Rome"],
-    answer: 2,
-  },
-  {
-    question: "What is the largest planet in our solar system?",
-    options: ["Earth", "Mars", "Jupiter", "Saturn"],
-    answer: 2,
-  },
-  {
-    question: "What is the chemical symbol for gold?",
-    options: ["Au", "Ag", "Fe", "Pb"],
-    answer: 0,
-  },
-];
+const loadingElement = document.getElementById("loading");
+const errorElement = document.getElementById("error");
 
 // Quiz State
 let currentQuestionIndex = 0;
@@ -39,14 +22,83 @@ let score = 0;
 let timeLeft = 30;
 let timerId;
 
-// End Quiz
-const endQuiz = () => {
-  clearInterval(timerId);
-  quizScreen.classList.add("hide");
-  endScreen.classList.remove("hide");
-  scoreElement.textContent = `${score} out of ${questions.length}`;
-  progressBar.style.width = "0%";
-  timerElement.textContent = "";
+// Questions Data
+let questions = [];
+
+// API Configuration
+const API_URL = "https://opentdb.com/api.php";
+const params = {
+  amount: 10,
+  category: 18, // Computers category
+  difficulty: "medium",
+  type: "multiple",
+};
+
+// Helper Functions
+const decodeHtml = (html) => {
+  const txt = document.createElement("textarea");
+  txt.innerHTML = html;
+  return txt.value;
+};
+
+const shuffleArray = (array) => {
+  return array.sort(() => Math.random() - 0.5);
+};
+
+const showLoading = (isLoading) => {
+  loadingElement.classList.toggle("hide", !isLoading);
+};
+
+const showError = (message) => {
+  errorElement.textContent = `Error: ${message}`;
+  errorElement.classList.remove("hide");
+};
+
+// Fetch Questions
+const fetchQuestions = async () => {
+  try {
+    showLoading(true);
+    const response = await fetch(`${API_URL}?${new URLSearchParams(params)}`);
+    const data = await response.json();
+    if (data.response_code !== 0) {
+      throw new Error("Failed to fetch questions. Please try again.");
+    }
+
+    questions = data.results.map((item) => ({
+      question: decodeHtml(item.question),
+      options: shuffleArray([
+        ...item.incorrect_answers.map((answer) => decodeHtml(answer)),
+        decodeHtml(item.correct_answer),
+      ]),
+      answer: item.incorrect_answers.length, // Correct answer index
+    }));
+  } catch (error) {
+    showError(error.message);
+    return [];
+  } finally {
+    showLoading(false);
+  }
+};
+
+// Load Question
+const loadQuestion = () => {
+  const { question, options } = questions[currentQuestionIndex];
+  questionElement.textContent = question;
+  optionsContainer.innerHTML = "";
+
+  options.forEach((option, index) => {
+    const button = document.createElement("button");
+    button.textContent = option.trim();
+    button.classList.add("optionButton");
+    button.addEventListener("click", () => checkAnswer(index));
+    optionsContainer.appendChild(button);
+  });
+
+  currentQuestionElement.textContent = currentQuestionIndex + 1;
+  totalQuestionsElement.textContent = questions.length;
+  progressBar.style.width = `${
+    (currentQuestionIndex / (questions.length - 1)) * 100
+  }%`;
 };
 
 // Check Answer
@@ -71,29 +123,12 @@ const checkAnswer = (selectedOption) => {
   }, 1000);
 };
 
-// Load Question
-const loadQuestion = () => {
-  const { question, options } = questions[currentQuestionIndex];
-  questionElement.textContent = question;
-  optionsContainer.innerHTML = "";
-
-  options.forEach((option, index) => {
-    const button = document.createElement("button");
-    button.textContent = option.trim();
-    button.classList.add("optionButton");
-    button.addEventListener("click", () => checkAnswer(index));
-    optionsContainer.appendChild(button);
-  });
-
-  currentQuestionElement.textContent = currentQuestionIndex + 1;
-  totalQuestionsElement.textContent = questions.length;
-  progressBar.style.width = `${
-    (currentQuestionIndex / questions.length) * 100
-  }%`;
-};
-
 // Start Timer
 const startTimer = () => {
+  clearInterval(timerId); // Clear any existing timer
+  timeLeft = 30;
+  timerElement.textContent = timeLeft;
+
   timerId = setInterval(() => {
     timeLeft--;
     timerElement.textContent = timeLeft;
@@ -119,6 +154,19 @@ const startQuiz = () => {
   startTimer();
 };
 
+// End Quiz
+const endQuiz = () => {
+  clearInterval(timerId);
+  quizScreen.classList.add("hide");
+  endScreen.classList.remove("hide");
+  scoreElement.textContent = `${score} out of ${questions.length}`;
+  progressBar.style.width = "0%";
+  timerElement.textContent = "";
+};
+
 // Event Listeners
 startButton.addEventListener("click", startQuiz);
 restartButton.addEventListener("click", startQuiz);
+
+// Fetch questions on page load
+fetchQuestions();
