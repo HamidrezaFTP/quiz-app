@@ -17,9 +17,9 @@ const loadingElement = document.getElementById("loading");
 const errorElement = document.getElementById("error");
 
 // Quiz State
-let currentQuestionIndex;
-let score;
-let timeLeft;
+let currentQuestionIndex = 0;
+let score = 0;
+let timeLeft = 120; // 2 minutes
 let timerId;
 
 // Questions Data
