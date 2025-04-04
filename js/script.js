@@ -19,7 +19,7 @@ const errorElement = document.getElementById("error");
 // Quiz State
 let currentQuestionIndex = 0;
 let score = 0;
-let timeLeft = 120; // 2 minutes
+let timeLeft = 120;
 let timerId;
 
 // Questions Data
@@ -29,7 +29,7 @@ let questions = [];
 const API_URL = "https://opentdb.com/api.php";
 const params = {
   amount: 10,
-  category: 18, // Computers category
+  category: 18, // Science: Computers
   difficulty: "medium",
   type: "multiple",
 };
